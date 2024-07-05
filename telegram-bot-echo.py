@@ -64,9 +64,19 @@ def handler(event, context):
     if 'text' not in message_in:
         send_message('Могу обработать только текстовое сообщение!', message_in)
         return FUNC_RESPONSE
+    
+    w_url = "https://api.openweathermap.org/data/2.5/weather"
+    w_params = {
+        "q": message_in['text'],
+        "appid": "b1d4b2cfb62107065d96dc99e50c1297",
+        "lang": "en",
+        "units": "metric"
+    }
+    
+    w_r = requests.get(url=w_url, params=w_params).json()
 
     # Выделяем текст и преобразуем регистр.
-    echo_text = message_in['text'].upper()
+    echo_text = w_r["main"]["temp"]
 
     # Отправляем преобразованный текст пользователю.
     send_message(echo_text, message_in)
